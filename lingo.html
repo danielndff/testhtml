@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+    <meta charset="UTF-8">
+    <title>Lingo Spel</title>
+    <link rel="stylesheet" href="style.css"> <!-- Link naar je CSS-bestand -->
+</head>
+<body>
+    <h1>Lingo</h1>
+    <div id="lingoBoard"></div>
+    <input type="text" id="guessInput" maxlength="5">
+    <button onclick="submitGuess()">Raad</button>
+    <script src="script.js"></script> <!-- Link naar je JavaScript-bestand -->
+</body>
+</html>
+
+<style>
+body {
+    font-family: Arial, sans-serif;
+    text-align: center;
+    margin-top: 50px;
+}
+
+#lingoBoard {
+    margin: 0 auto;
+    width: 200px;
+}
+
+.letterBox {
+    display: inline-block;
+    width: 30px;
+    height: 30px;
+    border: 1px solid black;
+    text-align: center;
+    line-height: 30px;
+    margin: 2px;
+}
+
+</style>
+
+<script>
+
+const targetWord = "appel"; // Je kunt hier een woordenlijst en een random functie gebruiken om het woord te kiezen
+const maxAttempts = 5;
+let currentAttempt = 0;
+
+window.onload = function() {
+    createLingoBoard();
+};
+
+function createLingoBoard() {
+    const board = document.getElementById('lingoBoard');
+    for (let i = 0; i < maxAttempts; i++) {
+        const wordRow = document.createElement('div');
+        for (let j = 0; j < 5; j++) {
+            const letterBox = document.createElement('div');
+            letterBox.classList.add('letterBox');
+            wordRow.appendChild(letterBox);
+        }
+        board.appendChild(wordRow);
+    }
+}
+
+function submitGuess() {
+    const guess = document.getElementById('guessInput').value;
+    if (guess.length === 5) {
+        updateBoard(guess);
+        currentAttempt++;
+        if (guess === targetWord) {
+            alert("Gefeliciteerd! Je hebt het woord geraden.");
+            return;
+        }
+        if (currentAttempt === maxAttempts) {
+            alert("Helaas, je pogingen zijn op. Het woord was: " + targetWord);
+        }
+    } else {
+        alert("Voer een woord in van 5 letters.");
+    }
+    document.getElementById('guessInput').value = '';
+}
+
+function updateBoard(guess) {
+    const rows = document.getElementById('lingoBoard').children;
+    const currentRow = rows[currentAttempt];
+    for (let i = 0; i < 5; i++) {
+        const letterBox = currentRow.children[i];
+        letterBox.textContent = guess[i];
+        if (targetWord[i] === guess[i]) {
+            letterBox.style.backgroundColor = 'green';
+        } else if (targetWord.includes(guess[i])) {
+            letterBox.style.backgroundColor = 'yellow';
+        }
+    }
+}
+</script>
